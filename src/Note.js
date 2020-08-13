@@ -4,25 +4,60 @@ import Moment from 'react-moment';
 
 import { Link } from 'react-router-dom';
 
-function Note(props) {
+import NotefulContext from './NotefulContext.js';
 
-    const contentNode = (props.content) ? 
-        <p>{props.content}</p> : null;
+export default class Note extends React.Component {
+    static defaultProps = {
+        goHomeCallback: () => {}
+    }
     
-    return (
-        <div className="note">
-            <Link to={`/note/${props.id}`}>
-                <h2>{props.name}</h2>
-            </Link>
-            <div>
-                <p>Last modified: <Moment format="ddd DD MMM, YYYY">{props.modified}</Moment></p>
-                <button>
-                    Delete Note
-                </button>
-            </div>
-            {contentNode}
-        </div>
-    );
-}
+    static contextType = NotefulContext;
 
-export default Note;
+    deleteNoteRecord = event => {
+        event.preventDefault();
+
+        const noteId = this.props.id;
+
+        fetch(`http://localhost:9090/notes/${noteId}`, {
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json'
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                // get the error message from the response,
+                return res.json().then(error => {
+                    // then throw it
+                    throw error
+                })
+            }
+            return res.json()
+        })
+        .then(data => {
+            // make sure this comes above deleteNote, or we are stuck on the component for too long
+            this.props.goHomeCallback();
+
+            this.context.deleteNote(noteId);
+        })
+        .catch(error => {
+            console.error(error)
+        })
+    }
+
+    render() {
+        return (
+            <div className="note">
+                <Link to={`/note/${this.props.id}`}>
+                    <h2>{this.props.name}</h2>
+                </Link>
+                <div>
+                    <p>Last modified: <Moment format="ddd DD MMM, YYYY">{this.props.modified}</Moment></p>
+                    <button onClick={this.deleteNoteRecord}>
+                        Delete Note
+                    </button>
+                </div>
+            </div>
+        );
+    }
+}

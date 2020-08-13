@@ -2,10 +2,15 @@ import React from 'react';
 import './App.css';
 import { NavLink } from 'react-router-dom';
 
+import NotefulContext from './NotefulContext.js';
+
 class UnfilteredSidebar extends React.Component {
+  static contextType = NotefulContext;
+
   render() {
-    
-    const folders = this.props.folders.map(item => {
+    const foldersContext = this.context.allFolders || [];
+
+    const folders = foldersContext.map(item => {
       return <li key={item.id} className="folders-nav__item">
         <NavLink to={`/folder/${item.id}`}>
           {item.name}

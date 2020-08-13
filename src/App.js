@@ -8,17 +8,53 @@ import UnfilteredSidebar from './UnfilteredSidebar.js';
 import FilteredSidebar from './FilteredSidebar.js';
 
 import NoteList from './NoteList.js';
-import Note from './Note.js';
+import FullNotePage from './FullNotePage.js';
 
-import DUMMYSTORE from './DUMMYSTORE.js';
+import NotefulContext from './NotefulContext.js';
 
 class App extends React.Component {
   state = {
-    allFolders: DUMMYSTORE.folders,
-    allNotes: DUMMYSTORE.notes
+    allFolders: [],
+    allNotes: []
+  }
+
+  deleteNoteFromState = noteId => {    
+    this.setState({
+      allNotes: this.state.allNotes.filter(note => note.id !== noteId)
+    });
+  };
+
+  componentDidMount() {
+    fetch(`http://localhost:9090/db`, {
+      method: 'GET',
+    })
+    .then(res => {
+      if (!res.ok) {
+        // get the error message from the response,
+        return res.json().then(error => {
+          // then throw it
+          throw error
+        })
+      }
+      return res.json()
+    })
+    .then(data => {
+      this.setState({
+        allFolders: data.folders,
+        allNotes: data.notes
+      })
+    })
+    .catch(error => {
+      console.error(error)
+    })
   }
 
   render() {
+    const contextValue = {
+      allFolders: this.state.allFolders,
+      allNotes: this.state.allNotes,
+      deleteNote: this.deleteNoteFromState
+    }
 
     return (
       <div className="app">
@@ -26,53 +62,30 @@ class App extends React.Component {
             <h1>Noteful</h1>
           </header>
           <main className="app-main">
-            <Sidebar>
-              <Route
-                exact path='/' 
-                render={() =>
-                  <UnfilteredSidebar folders={this.state.allFolders} />
-                } />
-              <Route 
-                path='/folder/:folderId' 
-                render={() =>
-                  <UnfilteredSidebar folders={this.state.allFolders} />
-                } />
-              <Route 
-                path='/note/:noteId' 
-                render={(routeProps) => {
-                  // this double lookup seems...surely there's a better way
-                  const selectedNote = this.state.allNotes.find(note => note.id === routeProps.match.params.noteId);
-                  const parentFolder = this.state.allFolders.find(f =>
-                      f.id === selectedNote.folderId
-                  );
-                  return <FilteredSidebar
-                    folderName={parentFolder.name}
-                    onClickBack={() => routeProps.history.goBack()} />
-                }} />
-             </Sidebar>
-            <Main>
-              <Route 
-                exact path='/' 
-                render={() =>
-                  <NoteList notes={this.state.allNotes} />
-                } />
-              <Route 
-                path='/folder/:folderId' 
-                render={(routeProps) =>
-                  <NoteList notes={this.state.allNotes.filter(note => note.folderId === routeProps.match.params.folderId)}  />
-                } />
-              <Route 
-                path='/note/:noteId' 
-                render={(routeProps) => {
-                  const selectedNote = this.state.allNotes.find(note => note.id === routeProps.match.params.noteId);
-                  return <Note 
-                    id={selectedNote.id}
-                    name={selectedNote.name}
-                    modified={selectedNote.modified}   
-                    content={selectedNote.content}
-                  />
-                }} />
-            </Main>
+            <NotefulContext.Provider value={contextValue}>
+              <Sidebar>
+                <Route
+                  exact path='/' 
+                  component={UnfilteredSidebar} />
+                <Route 
+                  path='/folder/:folderId' 
+                  component={UnfilteredSidebar} />
+                <Route 
+                  path='/note/:noteId' 
+                  component={FilteredSidebar} />
+              </Sidebar>
+              <Main>
+                <Route 
+                  exact path='/' 
+                  component={NoteList} />
+                <Route 
+                  path='/folder/:folderId' 
+                  component={NoteList} />
+                <Route 
+                  path='/note/:noteId' 
+                  component={FullNotePage} />
+              </Main>
+            </NotefulContext.Provider>
           </main>
       </div>
     );
