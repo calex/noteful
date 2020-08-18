@@ -24,6 +24,12 @@ class App extends React.Component {
     });
   };
 
+  addFolderToState = newFolderObject => {    
+    this.setState({
+      allNotes: this.state.allFolders.push(newFolderObject)
+    });
+  };
+
   componentDidMount() {
     fetch(`http://localhost:9090/db`, {
       method: 'GET',
@@ -53,7 +59,9 @@ class App extends React.Component {
     const contextValue = {
       allFolders: this.state.allFolders,
       allNotes: this.state.allNotes,
-      deleteNote: this.deleteNoteFromState
+      deleteNote: this.deleteNoteFromState,
+      addFolder: this.addFolderToState,
+      handleGoBack: this.handleGoBackAfterNewFolderAdd
     }
 
     return (
@@ -68,6 +76,9 @@ class App extends React.Component {
                   exact path='/' 
                   component={UnfilteredSidebar} />
                 <Route 
+                  exact path='/add-new-folder' 
+                  component={UnfilteredSidebar} />
+                <Route 
                   path='/folder/:folderId' 
                   component={UnfilteredSidebar} />
                 <Route 
@@ -77,6 +88,9 @@ class App extends React.Component {
               <Main>
                 <Route 
                   exact path='/' 
+                  component={NoteList} />
+                 <Route 
+                  exact path='/add-new-folder' 
                   component={NoteList} />
                 <Route 
                   path='/folder/:folderId' 

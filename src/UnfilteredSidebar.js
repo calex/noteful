@@ -1,11 +1,16 @@
 import React from 'react';
 import './App.css';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import AddFolder from './AddFolder.js';
 
 import NotefulContext from './NotefulContext.js';
 
 class UnfilteredSidebar extends React.Component {
   static contextType = NotefulContext;
+
+  handleGoBackAfterNewFolderAdd = () => {
+    this.props.history.goBack();
+  }
 
   render() {
     const foldersContext = this.context.allFolders || [];
@@ -17,6 +22,11 @@ class UnfilteredSidebar extends React.Component {
         </NavLink>
       </li>;
     });
+    
+    const bottomForm = this.props.match.path === '/add-new-folder' ?
+      <AddFolder handleSubmitCallback={this.handleGoBackAfterNewFolderAdd} /> : <Link to={`/add-new-folder`}>
+          <button>Add Folder</button>
+        </Link>;
 
     return (
       <>
@@ -25,7 +35,7 @@ class UnfilteredSidebar extends React.Component {
               {folders}
             </ul>
           </nav>
-          <button>Add Folder</button>
+          {bottomForm}
       </>
     );
   }
