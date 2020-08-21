@@ -3,6 +3,8 @@ import './App.css';
 
 import { v4 as uuidv4 } from 'uuid';
 
+import ErrorMessage from './ErrorMessage.js';
+
 import NotefulContext from './NotefulContext.js';
 
 export default class AddFolder extends React.Component {
@@ -10,14 +12,24 @@ export default class AddFolder extends React.Component {
         super(props);
         
         this.state = {
-          newFolder: {
-            value: '',
-            touched: false
-          }
+            errorMessage: null, 
+
+            newFolder: {
+                value: '',
+                touched: false
+            }
         }
-      }
+    }
 
     static contextType = NotefulContext;
+
+    validateFolderNameInput() {
+        const folderName = this.state.newFolder.value.trim();
+        
+        if ((folderName.length === 0) && this.state.newFolder.touched) {
+          return 'Folder Name is required';
+        }
+    }
 
     addFolderRecord = folderName => {
         const newFolderObject = {
@@ -43,17 +55,23 @@ export default class AddFolder extends React.Component {
             return res.json()
         })
         .then(data => {
-            this.props.handleSubmitCallback();
+            this.props.handleSubmitCallback(newFolderObject.id);
 
             this.context.addFolder(newFolderObject);
         })
         .catch(error => {
-            console.error(error)
+            console.error(error);
+
+            this.setState({
+                errorMessage: `Sorry, something went wrong: ${error}.`
+            });
         })
     }
 
     updateFolderNameInComponentState(typedInName) {
         this.setState({
+            errorMessage: null,
+
             newFolder: {
                 value: typedInName,
                 touched: true
@@ -64,11 +82,24 @@ export default class AddFolder extends React.Component {
     handleSubmit = (event) => {
         
         event.preventDefault();
+
+        const folderName = this.state.newFolder.value.trim();
         
-        this.addFolderRecord(this.state.newFolder.value);
+        if (folderName.length > 0) {
+            this.addFolderRecord(folderName);
+        }
+        else {
+            this.setState({
+                errorMessage: "Please add a folder name"
+            })
+        }
     }
     
     render() {
+        const errorMessage = this.state.errorMessage
+            ? this.state.errorMessage
+            : this.validateFolderNameInput();
+
         return (
             <form className="add-folder-form" onSubmit={e => this.handleSubmit(e)}>
                 <h2>Add a New Folder</h2>
@@ -77,9 +108,14 @@ export default class AddFolder extends React.Component {
                     type="text" 
                     placeholder="New Folder Name"
                     onChange={e => this.updateFolderNameInComponentState(e.target.value)} />
-                <button>
+                <button
+                    type="submit"
+                    disabled={
+                        this.validateFolderNameInput()
+                    }>
                     Add Folder
                 </button>
+                <ErrorMessage message={errorMessage} />
             </form>
         );
     }

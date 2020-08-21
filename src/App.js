@@ -1,21 +1,24 @@
 import React from 'react';
 import './App.css';
 import { Route } from 'react-router-dom';
+
 import Sidebar from './Sidebar.js';
 import Main from './Main.js';
-
 import UnfilteredSidebar from './UnfilteredSidebar.js';
 import FilteredSidebar from './FilteredSidebar.js';
-
 import NoteList from './NoteList.js';
 import FullNotePage from './FullNotePage.js';
 
 import NotefulContext from './NotefulContext.js';
 
 class App extends React.Component {
-  state = {
-    allFolders: [],
-    allNotes: []
+  constructor() {
+    super();
+  
+    this.state = {
+      allFolders: [],
+      allNotes: []
+    };
   }
 
   deleteNoteFromState = noteId => {    
@@ -24,9 +27,19 @@ class App extends React.Component {
     });
   };
 
-  addFolderToState = newFolderObject => {    
+  addNoteToState = newNotesObject => {  
+    const newAllNotes = [...this.state.allNotes, newNotesObject];
+
     this.setState({
-      allNotes: this.state.allFolders.push(newFolderObject)
+      allNotes: newAllNotes
+    });
+  };
+
+  addFolderToState = newFolderObject => {  
+    const newAllFolders = [...this.state.allFolders, newFolderObject];
+
+    this.setState({
+      allFolders: newAllFolders
     });
   };
 
@@ -61,7 +74,7 @@ class App extends React.Component {
       allNotes: this.state.allNotes,
       deleteNote: this.deleteNoteFromState,
       addFolder: this.addFolderToState,
-      handleGoBack: this.handleGoBackAfterNewFolderAdd
+      addNote: this.addNoteToState
     }
 
     return (

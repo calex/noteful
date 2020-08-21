@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.css';
 
-function Sidebar(props) {
+import PropTypes from 'prop-types';
+
+export default function Sidebar(props) {
   return (
     <aside className="sidebar">
         {props.children}
@@ -9,4 +11,6 @@ function Sidebar(props) {
   );
 }
 
-export default Sidebar;
+Sidebar.propTypes = {
+  children: PropTypes.array
+};

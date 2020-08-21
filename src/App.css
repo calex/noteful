@@ -71,6 +71,10 @@ header {
 
 .note {
   padding: 1em;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .note,
@@ -78,4 +82,93 @@ header {
   width: 100%;
   margin-bottom: 1em;
   border: 1px solid #000;
+}
+
+.form {
+  padding: 0 20px 20px 20px;
+}
+
+.top-form__toggler {
+  cursor: pointer;
+  padding: 20px;
+}
+
+button {
+  transition: background-color 0.25s ease-in-out;
+  cursor: pointer;
+  appearance: none;
+  outline: none;
+  border: none; 
+  background-color: lightslategray;
+  color: #FFF;
+
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 1; 
+
+  height: 3rem;
+  min-width: 200px;
+}
+
+button:hover {
+  background-color: slategray;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a:hover {
+  color: lightslategray;
+}
+
+input,
+select {
+  height: 3rem;
+}
+
+input,
+select,
+textarea {
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+label {
+  padding: 0 0.5em 0.25em;
+}
+
+textarea {
+  height: 10em;
+}
+
+.add-note-form,
+.add-folder-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+}
+
+.add-folder-form input,
+.add-folder-form button {
+  width: 100%;
+}
+
+.add-folder-form h2 {
+  line-height: 1.5;
+}
+
+.error-message {
+  padding: 0.5em;
+  color: red;
+}
+
+.sidebar h3 {
+  margin-top: 1em;
 }

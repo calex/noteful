@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.css';
 
-function Main(props) {
+import PropTypes from 'prop-types';
+
+export default function Main(props) {
   return (
     <main className="main-notes">
         {props.children}
@@ -9,4 +11,7 @@ function Main(props) {
   );
 }
 
-export default Main;
+Main.propTypes = {
+  children: PropTypes.array
+};
+

@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
+
 import Moment from 'react-moment';
-
 import { Link } from 'react-router-dom';
-
 import NotefulContext from './NotefulContext.js';
+import PropTypes from 'prop-types';
 
 export default class Note extends React.Component {
     static defaultProps = {
@@ -48,16 +48,23 @@ export default class Note extends React.Component {
     render() {
         return (
             <div className="note">
-                <Link to={`/note/${this.props.id}`}>
-                    <h2>{this.props.name}</h2>
-                </Link>
                 <div>
+                    <Link to={`/note/${this.props.id}`}>
+                        <h2>{this.props.name}</h2>
+                    </Link>
                     <p>Last modified: <Moment format="ddd DD MMM, YYYY">{this.props.modified}</Moment></p>
-                    <button onClick={this.deleteNoteRecord}>
-                        Delete Note
-                    </button>
                 </div>
+                <button onClick={this.deleteNoteRecord}>
+                    Delete Note
+                </button>
             </div>
         );
     }
 }
+
+Note.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  modified: PropTypes.string.isRequired,
+  goHomeCallback: PropTypes.func.isRequired
+};

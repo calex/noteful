@@ -4,16 +4,17 @@ import { Link, NavLink } from 'react-router-dom';
 import AddFolder from './AddFolder.js';
 
 import NotefulContext from './NotefulContext.js';
+import PropTypes from 'prop-types';
 
-class UnfilteredSidebar extends React.Component {
+export default class UnfilteredSidebar extends React.Component {
   static contextType = NotefulContext;
 
-  handleGoBackAfterNewFolderAdd = () => {
-    this.props.history.goBack();
+  handleGoBackAfterNewFolderAdd = (itemId) => {
+    this.props.history.push(`/folder/${itemId}`);  
   }
 
   render() {
-    const foldersContext = this.context.allFolders || [];
+    const foldersContext = this.context.allFolders;
 
     const folders = foldersContext.map(item => {
       return <li key={item.id} className="folders-nav__item">
@@ -41,4 +42,7 @@ class UnfilteredSidebar extends React.Component {
   }
 }
 
-export default UnfilteredSidebar;
+UnfilteredSidebar.propTypes = {
+  history: PropTypes.object,
+  match: PropTypes.object
+};

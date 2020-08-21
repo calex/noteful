@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
 
+import PropTypes from 'prop-types';
 import NotefulContext from './NotefulContext.js';
 
-class FilteredSidebar extends React.Component {
+export default class FilteredSidebar extends React.Component {
   static contextType = NotefulContext;
 
   handleBackButtonClick = () => {
@@ -27,4 +28,7 @@ class FilteredSidebar extends React.Component {
   }
 }
 
-export default FilteredSidebar;
+FilteredSidebar.propTypes = {
+  history: PropTypes.object,
+  match: PropTypes.object
+};

@@ -3,9 +3,10 @@ import './App.css';
 
 import Note from './Note.js';
 
+import PropTypes from 'prop-types';
 import NotefulContext from './NotefulContext.js';
 
-class FullNotePage extends React.Component {
+export default class FullNotePage extends React.Component {
   static contextType = NotefulContext;
 
   handleGoHome = () => {
@@ -28,4 +29,7 @@ class FullNotePage extends React.Component {
   }
 }
 
-export default FullNotePage;
+FullNotePage.propTypes = {
+  history: PropTypes.object,
+  match: PropTypes.object
+};
