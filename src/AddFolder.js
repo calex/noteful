@@ -13,12 +13,15 @@ export default class AddFolder extends React.Component {
         
         this.state = {
             errorMessage: null, 
+            newFolderNameInputInvalid: false,
 
             newFolder: {
                 value: '',
                 touched: false
             }
         }
+
+        this.newFolderInput = React.createRef();
     }
 
     static contextType = NotefulContext;
@@ -71,6 +74,7 @@ export default class AddFolder extends React.Component {
     updateFolderNameInComponentState(typedInName) {
         this.setState({
             errorMessage: null,
+            newFolderNameInputInvalid: false,
 
             newFolder: {
                 value: typedInName,
@@ -90,8 +94,12 @@ export default class AddFolder extends React.Component {
         }
         else {
             this.setState({
-                errorMessage: "Please add a folder name"
+                errorMessage: "Please add a folder name",
+                newFolderNameInputInvalid: true
             })
+
+            // reset the focus on the input
+            this.newFolderInput.current.focus();           
         }
     }
     
@@ -106,7 +114,12 @@ export default class AddFolder extends React.Component {
                 <input 
                     id="new-folder-input"
                     type="text" 
+                    aria-required="true"
+                    aria-describedby="error-message"
+                    aria-label="Enter your new folder's name"
+                    aria-invalid={this.state.newFolderNameInputInvalid}
                     placeholder="New Folder Name"
+                    ref={this.newFolderInput}
                     onChange={e => this.updateFolderNameInComponentState(e.target.value)} />
                 <button
                     type="submit"

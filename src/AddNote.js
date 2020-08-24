@@ -17,6 +17,10 @@ export default class AddNote extends React.Component {
 
             errorMessage: null,
 
+            noteTitleInputInvalid: false,
+
+            noteBodyInputInvalid: false,
+
             noteNameInputTouched: false,
 
             noteBodyTextAreaTouched: false,
@@ -30,6 +34,10 @@ export default class AddNote extends React.Component {
                 body: '',
             }
         }
+
+        this.folderSelectDropdown = React.createRef();
+        this.noteTitleInput = React.createRef();
+        this.noteBodyInput = React.createRef();
     }
 
     static contextType = NotefulContext;
@@ -38,6 +46,23 @@ export default class AddNote extends React.Component {
         this.setState({
             foldedUp: !this.state.foldedUp
         });
+    }
+
+    toggleFoldedStateWithMouse = () => {
+        this.toggleFoldedState();
+    }
+
+    toggleFoldedStateWithKeyboard = (e) => {
+        if (this.state.foldedUp === false && (e.keycode === 9 || 13 || 32)) {
+            if (this.folderSelectDropdown.current !== null) {
+                this.folderSelectDropdown.current.focus(); 
+            }          
+        }
+        else if (e.keycode === 9 || 13 || 32) {
+            this.setState({
+                foldedUp: false
+            })
+        }
     }
 
     validateNewNote() {
@@ -98,6 +123,7 @@ export default class AddNote extends React.Component {
     updateNoteNameInComponentState(typedInName) {
         this.setState({
             errorMessage: null,
+            noteTitleInputInvalid: false,
             noteNameInputTouched: true,
             newNote: {...this.state.newNote, name: typedInName }
         });
@@ -106,6 +132,7 @@ export default class AddNote extends React.Component {
     updateNoteBodyInComponentState(typedInNote) {
         this.setState({
             errorMessage: null,
+            noteBodyInputInvalid: false,
             noteBodyTextAreaTouched: true,
             newNote: {...this.state.newNote, body: typedInNote }
         });
@@ -124,23 +151,35 @@ export default class AddNote extends React.Component {
             this.addNoteRecord(selectedFolderId, this.state.newNote);
             
             this.setState({
-                foldedUp: true
+                foldedUp: true,
+                noteTitleInputInvalid: false,
+                noteBodyInputInvalid: false
             })  
         }
         else {
             if ((noteName.length === 0) && (noteBody.length > 0)) {
                 this.setState({
-                    errorMessage: "Please add a note name"
-                })            
+                    errorMessage: "Please add a note name",
+                    noteTitleInputInvalid: true
+                })
+                // reset the focus on the input
+                this.noteTitleInput.current.focus();           
             }
             else if ((noteName.length > 0) && (noteBody.length === 0)) {
                 this.setState({
-                    errorMessage: "Please add a note"
-                })            
+                    errorMessage: "Please add a note",
+                    noteBodyInputInvalid: true
+                }) 
+                // reset the focus on the input
+                this.noteBodyInput.current.focus();                 
             } else {
                 this.setState({
-                    errorMessage: "Please add some note information"
-                })            
+                    errorMessage: "Please add some note information",
+                    noteTitleInputInvalid: true,
+                    noteBodyInputInvalid: true
+                })   
+                // reset the focus on the input
+                this.noteTitleInput.current.focus();           
             }
             
         }
@@ -166,25 +205,43 @@ export default class AddNote extends React.Component {
         return (
 
             <section className="top-form">
-                <div className="top-form__toggler" onClick={this.toggleFoldedState}><h2>+ Add a New Note</h2></div>
+                <div tabIndex="1" className="top-form__toggler" onKeyDown={(e) => this.toggleFoldedStateWithKeyboard(e)} onClick={this.toggleFoldedStateWithMouse}><h2>+ Add a New Note</h2></div>
                 {!this.state.foldedUp && <form className="form add-note-form" onSubmit={e => this.handleSubmit(e)}>
                     <label htmlFor="new-note-folder-select">Select Folder</label>
                     <select
+                        tabIndex={!this.state.foldedUp ? "1" : "" }
+                        aria-required="true"
+                        aria-describedby="error-message"
+                        aria-label="Select from folders to put a note within"
                         value={selectedFolderId}
+                        ref={this.folderSelectDropdown}
                         id="new-note-folder-select"
                         onChange={e => this.updateSelectedFolderInComponentState(e.target.value)}>
                             {selectFolderDropdownOptions}
                     </select>
                     <input 
+                        tabIndex={!this.state.foldedUp ? "2" : "" }
+                        aria-required="true"
+                        aria-describedby="error-message"
+                        aria-label="Enter your new note title"
+                        aria-invalid={this.state.noteTitleInputInvalid}
                         id="new-note-title-input"
                         type="text" 
+                        ref={this.noteTitleInput}
                         placeholder="New Note Title"
                         onChange={e => this.updateNoteNameInComponentState(e.target.value)} />
                     <textarea 
+                        tabIndex={!this.state.foldedUp ? "3" : "" }
+                        aria-required="true"
+                        aria-describedby="error-message"
+                        aria-label="Enter your new note"
+                        aria-invalid={this.state.noteBodyInputInvalid}
                         id="new-note-textarea"
+                        ref={this.noteBodyInput}
                         placeholder="Type Your New Note"
                         onChange={e => this.updateNoteBodyInComponentState(e.target.value)} />
                     <button
+                        tabIndex={!this.state.foldedUp ? "4" : "" }
                         type="submit"
                         disabled={
                             this.validateNewNote()

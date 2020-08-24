@@ -49,12 +49,12 @@ export default class Note extends React.Component {
         return (
             <div className="note">
                 <div>
-                    <Link to={`/note/${this.props.id}`}>
+                    <Link tabIndex="2" to={`/note/${this.props.id}`}>
                         <h2>{this.props.name}</h2>
                     </Link>
                     <p>Last modified: <Moment format="ddd DD MMM, YYYY">{this.props.modified}</Moment></p>
                 </div>
-                <button onClick={this.deleteNoteRecord}>
+                <button tabIndex="3" onClick={this.deleteNoteRecord}>
                     Delete Note
                 </button>
             </div>
