@@ -19,7 +19,7 @@ export default class UnfilteredSidebar extends React.Component {
     const folders = foldersContext.map(item => {
       return <li key={item.id} className="folders-nav__item">
         <NavLink to={`/folder/${item.id}`}>
-          {item.name}
+          {item.folder_name}
         </NavLink>
       </li>;
     });

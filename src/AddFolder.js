@@ -37,10 +37,11 @@ export default class AddFolder extends React.Component {
     addFolderRecord = folderName => {
         const newFolderObject = {
             'id': uuidv4(),
-            'name': folderName
+            'folder_name': folderName,
+            'date_created': new Date().toISOString()
         }
 
-        fetch(`http://localhost:9090/folders`, {
+        fetch(`http://localhost:8000/api/folders`, {
             method: 'POST',
             body: JSON.stringify(newFolderObject),
             headers: {

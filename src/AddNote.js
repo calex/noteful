@@ -77,17 +77,17 @@ export default class AddNote extends React.Component {
     addNoteRecord = (folderId, newNote) => {
         const newNoteObject = {
             'id': uuidv4(),
-            'name': newNote.name,
+            'note_name': newNote.name,
             'modified': new Date().toISOString(),
             'content': newNote.body,
-            'folderId': folderId
+            'folder_id': folderId
         }
 
-        fetch(`http://localhost:9090/notes`, {
+        fetch(`http://localhost:8000/api/notes`, {
             method: 'POST',
             body: JSON.stringify(newNoteObject),
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
             }
         })
         .then(async res => {
@@ -195,7 +195,7 @@ export default class AddNote extends React.Component {
             <option 
                 key={item.id} 
                 value={item.id}>
-                {item.name}
+                {item.folder_name}
             </option>
           );
         });

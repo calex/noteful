@@ -20,7 +20,7 @@ export default class FullNotePage extends React.Component {
       <div className="note-page">
         <Note 
           id={selectedNote.id}
-          name={selectedNote.name}
+          name={selectedNote.note_name}
           modified={selectedNote.modified}
           goHomeCallback={this.handleGoHome} />
         <p>{selectedNote.content}</p>

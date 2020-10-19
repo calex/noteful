@@ -21,7 +21,7 @@ export default class FilteredSidebar extends React.Component {
       <div>
         <button onClick={this.handleBackButtonClick}>Go Back</button>
         {parentFolder && (
-          <h3>{parentFolder.name}</h3>  
+          <h3>{parentFolder.folder_name}</h3>  
         )}
       </div>
     );

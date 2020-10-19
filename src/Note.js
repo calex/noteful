@@ -18,7 +18,7 @@ export default class Note extends React.Component {
 
         const noteId = this.props.id;
 
-        fetch(`http://localhost:9090/notes/${noteId}`, {
+        fetch(`http://localhost:8000/api/notes/${noteId}`, {
             method: 'DELETE',
             headers: {
                 'content-type': 'application/json'
@@ -32,7 +32,7 @@ export default class Note extends React.Component {
                     throw error
                 })
             }
-            return res.json()
+            //return res.json()
         })
         .then(data => {
             // make sure this comes above deleteNote, or we are stuck on the component for too long
@@ -50,7 +50,7 @@ export default class Note extends React.Component {
             <div className="note">
                 <div>
                     <Link tabIndex="2" to={`/note/${this.props.id}`}>
-                        <h2>{this.props.name}</h2>
+                        <h2>{this.props.note_name}</h2>
                     </Link>
                     <p>Last modified: <Moment format="ddd DD MMM, YYYY">{this.props.modified}</Moment></p>
                 </div>
@@ -64,7 +64,7 @@ export default class Note extends React.Component {
 
 Note.propTypes = {
   id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  note_name: PropTypes.string.isRequired,
   modified: PropTypes.string.isRequired,
   goHomeCallback: PropTypes.func.isRequired
 };

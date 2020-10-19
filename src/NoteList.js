@@ -19,14 +19,14 @@ export default class NoteList extends React.Component {
     const matchParams = this.props.match.params;
 
     const notesInContext = matchParams.folderId && allNotes.length ?     
-      allNotes.filter(note => note.folderId === matchParams.folderId)
+      allNotes.filter(note => note.folder_id === matchParams.folderId)
     : allNotes;
 
     const selectedFolderId = matchParams.folderId ? 
       matchParams.folderId
-    : allFolders.length ?
-    this.context.allFolders[0].id
-    : '';
+      : allFolders.length ?
+      this.context.allFolders[0].id
+      : '';
 
     const notes = notesInContext.length ? 
       notesInContext.map(item => {
@@ -34,13 +34,13 @@ export default class NoteList extends React.Component {
           <Note 
           key={item.id} 
           id={item.id} 
-          name={item.name} 
+          note_name={item.note_name} 
           modified={item.modified}
           goHomeCallback={()=>{}} />
         </ComponentsError>;
       }).sort(function(a, b) {
         // sort by ISO date, newest first
-        return (a.modified < b.modified) ? 0 : ((a.modified > b.jodified) ? 1 : -1);
+        return (a.modified < b.modified) ? 0 : ((a.modified > b.modified) ? 1 : -1);
     })
     : <p>No notes have been added to this folder.</p>
 

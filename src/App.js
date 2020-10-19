@@ -44,7 +44,7 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    fetch(`http://localhost:9090/db`, {
+    fetch(`http://localhost:8000/api/folders`, {
       method: 'GET',
     })
     .then(res => {
@@ -59,8 +59,29 @@ class App extends React.Component {
     })
     .then(data => {
       this.setState({
-        allFolders: data.folders,
-        allNotes: data.notes
+        allFolders: data
+      })
+    })
+    .catch(error => {
+      console.error(error)
+    })
+  
+    fetch(`http://localhost:8000/api/notes`, {
+      method: 'GET',
+    })
+    .then(res => {
+      if (!res.ok) {
+        // get the error message from the response,
+        return res.json().then(error => {
+          // then throw it
+          throw error
+        })
+      }
+      return res.json()
+    })
+    .then(data => {
+      this.setState({
+        allNotes: data
       })
     })
     .catch(error => {
