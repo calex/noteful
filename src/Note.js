@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import config from './config.js';
 
 import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
@@ -18,7 +19,7 @@ export default class Note extends React.Component {
 
         const noteId = this.props.id;
 
-        fetch(`http://localhost:8000/api/notes/${noteId}`, {
+        fetch(`${config.API_ENDPOINT}/notes/${noteId}`, {
             method: 'DELETE',
             headers: {
                 'content-type': 'application/json'

@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import config from './config.js';
 import { Route } from 'react-router-dom';
 
 import Sidebar from './Sidebar.js';
@@ -44,7 +45,7 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    fetch(`http://localhost:8000/api/folders`, {
+    fetch(`${config.API_ENDPOINT}/folders`, {
       method: 'GET',
     })
     .then(res => {
@@ -66,7 +67,7 @@ class App extends React.Component {
       console.error(error)
     })
   
-    fetch(`http://localhost:8000/api/notes`, {
+    fetch(`${config.API_ENDPOINT}/notes`, {
       method: 'GET',
     })
     .then(res => {

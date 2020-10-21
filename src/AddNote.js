@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import config from './config.js';
 
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
@@ -83,7 +84,7 @@ export default class AddNote extends React.Component {
             'folder_id': folderId
         }
 
-        fetch(`http://localhost:8000/api/notes`, {
+        fetch(`${config.API_ENDPOINT}/notes`, {
             method: 'POST',
             body: JSON.stringify(newNoteObject),
             headers: {

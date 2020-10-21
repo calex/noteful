@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import config from './config.js';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -41,7 +42,7 @@ export default class AddFolder extends React.Component {
             'date_created': new Date().toISOString()
         }
 
-        fetch(`http://localhost:8000/api/folders`, {
+        fetch(`${config.API_ENDPOINT}/folders`, {
             method: 'POST',
             body: JSON.stringify(newFolderObject),
             headers: {
